@@ -31,6 +31,7 @@
 #include "addons/rotaryencoder.h"
 #include "addons/i2c_gpio_pcf8575.h"
 #include "addons/gamepad_usb_host.h"
+#include "addons/analog_to_dpad.h"
 
 
 // Pico includes
@@ -111,6 +112,7 @@ void GP2040::setup() {
 	addons.LoadAddon(new ReverseInput(), CORE0_INPUT);
 	addons.LoadAddon(new TurboInput(), CORE0_INPUT); // Turbo overrides button states and should be close to the end
 	addons.LoadAddon(new InputMacro(), CORE0_INPUT);
+	addons.LoadAddon(new AnalogToDpad(), CORE0_INPUT);
 
 	InputMode inputMode = gamepad->getOptions().inputMode;
 	const BootAction bootAction = getBootAction();

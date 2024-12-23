@@ -527,6 +527,11 @@ app.get('/api/getAddonsOptions', (req, res) => {
 		DRV8833RumbleAddonEnabled: 1,
 		ReactiveLEDAddonEnabled: 1,
 		GamepadUSBHostAddonEnabled: 1,
+		deadzone: 0.3,
+		enableDynamicDeadzone: false,
+		dynamicDeadzone: 0.3,
+		cardinalAngle: 45,
+		directionStickyness: 60,
 		usedPins: Object.values(picoController),
 	});
 });

@@ -167,4 +167,13 @@ export default {
 	'drv8833-rumble-pwm-frequency-label': 'PWM Frequency',
 	'drv8833-rumble-duty-min-label': 'Minimum Duty Cycle',
 	'drv8833-rumble-duty-max-label': 'Maximum Duty Cycle',
+	'analog-to-dpad-header-text': 'Analog to D-pad',
+	'analog-to-dpad-deadzone-text': 'Deadzone config. Dynamic deadzone will increase the deadzone based on how far the stick is held so dashes are easier.',
+	'analog-to-dpad-deadzone': 'Deadzone',
+	'analog-to-dpad-enable-dynamic-deadzone': 'Enable Dynamic Deadzone',
+	'analog-to-dpad-dynamic-deadzone': 'Dynamic Deadzone',
+	'analog-to-dpad-cardinal-angle-text': 'Adjust the size of the cardinal angles. The stickyness is used to debounce the angles so holding near the target direction will not rapidly trigger inputs.',
+	'analog-to-dpad-cardinal-angle': 'Cardinal Angle',
+	'analog-to-dpad-direction-stickyness': 'Direction Stickyness (in Degrees)',
+	'analog-to-dpad-enable-pin': "Enable Pin"
 };

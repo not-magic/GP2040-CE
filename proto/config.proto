@@ -499,6 +499,16 @@ message TiltOptions
     optional int32 factorTilt2RightY =  21;
 }
 
+message AnalogToDpadOptions
+{
+    optional bool enabled = 1;
+    optional int32 deadzone = 2;
+    optional bool enableDynamicDeadzone = 3;
+    optional int32 dynamicDeadzone = 4;
+    optional int32 cardinalAngle = 5;
+    optional float directionStickyness = 7;
+}
+
 message BuzzerOptions
 {
     optional bool enabled = 1;
@@ -823,6 +833,7 @@ message AddonOptions
     optional DRV8833RumbleOptions drv8833RumbleOptions = 26;
     optional ReactiveLEDOptions reactiveLEDOptions = 27;
     optional GamepadUSBHostOptions gamepadUSBHostOptions = 28;
+    optional AnalogToDpadOptions analogToDpadOptions = 29;
 }
 
 message MigrationHistory

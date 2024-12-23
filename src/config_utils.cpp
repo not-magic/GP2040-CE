@@ -35,6 +35,7 @@
 #include "addons/i2c_gpio_pcf8575.h"
 #include "addons/drv8833_rumble.h"
 #include "addons/gamepad_usb_host.h"
+#include "addons/analog_to_dpad.h"
 
 #include "CRC32.h"
 #include "FlashPROM.h"
@@ -629,6 +630,14 @@ void ConfigUtils::initUnsetPropertiesWithDefaults(Config& config)
     INIT_UNSET_PROPERTY(config.addonOptions.tiltOptions, tiltRightAnalogLeftPin, (Pin_t)-1);
     INIT_UNSET_PROPERTY(config.addonOptions.tiltOptions, tiltRightAnalogRightPin, (Pin_t)-1);
     INIT_UNSET_PROPERTY(config.addonOptions.tiltOptions, tiltSOCDMode, TILT_SOCD_MODE);
+
+    // addonOptions.analogToDpadOptions
+    INIT_UNSET_PROPERTY(config.addonOptions.analogToDpadOptions, enabled, !!ANALOG_TO_DPAD_ENABLED);
+    INIT_UNSET_PROPERTY(config.addonOptions.analogToDpadOptions, deadzone, ANALOG_TO_DPAD_DEADZONE);
+    INIT_UNSET_PROPERTY(config.addonOptions.analogToDpadOptions, enableDynamicDeadzone, ANALOG_TO_DPAD_DYNAMIC_DEADZONE_ENABLED);
+    INIT_UNSET_PROPERTY(config.addonOptions.analogToDpadOptions, dynamicDeadzone, ANALOG_TO_DPAD_DYNAMIC_DEADZONE);
+    INIT_UNSET_PROPERTY(config.addonOptions.analogToDpadOptions, cardinalAngle, ANALOG_TO_DPAD_CARDINAL_ANGLE);
+    INIT_UNSET_PROPERTY(config.addonOptions.analogToDpadOptions, directionStickyness, ANALOG_TO_DPAD_DIRECTION_STICKYNESS);
 
     // addonOptions.buzzerOptions
     INIT_UNSET_PROPERTY(config.addonOptions.buzzerOptions, enabled, !!BUZZER_ENABLED);

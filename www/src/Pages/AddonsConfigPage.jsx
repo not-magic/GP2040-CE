@@ -59,6 +59,7 @@ import ReactiveLED, {
 	reactiveLEDScheme,
 	reactiveLEDState,
 } from '../Addons/ReactiveLED';
+import AnalogToDpad, { analogToDpadScheme, analogToDpadState } from '../Addons/AnalogToDpad';
 
 const schema = yup.object().shape({
 	...analogScheme,
@@ -82,6 +83,7 @@ const schema = yup.object().shape({
 	...drv8833RumbleScheme,
 	...reactiveLEDScheme,
 	...gamepadUSBHostScheme,
+	...analogToDpadScheme,
 });
 
 const defaultValues = {
@@ -107,6 +109,7 @@ const defaultValues = {
 	...drv8833RumbleState,
 	...reactiveLEDState,
 	...gamepadUSBHostState,
+	...analogToDpadState,
 };
 
 const ADDONS = [
@@ -127,6 +130,7 @@ const ADDONS = [
 	FocusMode,
 	Keyboard,
 	GamepadUSBHost,
+	AnalogToDpad,
 	InputHistory,
 	Rotary,
 	PCF8575,

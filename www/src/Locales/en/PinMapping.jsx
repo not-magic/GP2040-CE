@@ -98,5 +98,6 @@ export default {
 		ANALOG_DIRECTION_MOD_HIGH: 'Analog Stick Modifier High',
 		BUTTON_PRESS_INPUT_REVERSE: 'Reverse Input',
 		SUSTAIN_FOCUS_MODE: 'Focus Mode Enable',
+		SUSTAIN_ANALOG_TO_DPAD: 'Analog to D-pad Enable',
 	},
 };
