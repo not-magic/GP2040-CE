@@ -11,6 +11,7 @@
 #include "GamepadConfig.h"
 #include "version.h"
 #include "addons/analog.h"
+#include "addons/analog_to_dpad.h"
 #include "addons/board_led.h"
 #include "addons/bootsel_button.h"
 #include "addons/buzzerspeaker.h"

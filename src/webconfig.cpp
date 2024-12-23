@@ -1720,6 +1720,15 @@ std::string setAddonOptions()
     docToValue(tiltOptions.tiltSOCDMode, doc, "tiltSOCDMode");
     docToValue(tiltOptions.enabled, doc, "TiltInputEnabled");
 
+
+    AnalogToDpadOptions& analogToDpadOptions = Storage::getInstance().getAddonOptions().analogToDpadOptions;
+    docToValue(analogToDpadOptions.deadzone, doc, "deadzone");
+    docToValue(analogToDpadOptions.enableDynamicDeadzone, doc, "enableDynamicDeadzone");
+    docToValue(analogToDpadOptions.dynamicDeadzone, doc, "dynamicDeadzone");
+    docToValue(analogToDpadOptions.cardinalAngle, doc, "cardinalAngle");
+    docToValue(analogToDpadOptions.directionStickyness, doc, "directionStickyness");
+    docToValue(analogToDpadOptions.enabled, doc, "AnalogToDpadInputEnabled");
+
     FocusModeOptions& focusModeOptions = Storage::getInstance().getAddonOptions().focusModeOptions;
     docToValue(focusModeOptions.buttonLockMask, doc, "focusModeButtonLockMask");
     docToValue(focusModeOptions.buttonLockEnabled, doc, "focusModeButtonLockEnabled");
@@ -2173,6 +2182,14 @@ std::string getAddonOptions()
     writeDoc(doc, "factorTilt2RightY", tiltOptions.factorTilt2RightY);
     writeDoc(doc, "tiltSOCDMode", tiltOptions.tiltSOCDMode);
     writeDoc(doc, "TiltInputEnabled", tiltOptions.enabled);
+
+    const AnalogToDpadOptions& analogToDpadOptions = Storage::getInstance().getAddonOptions().analogToDpadOptions;
+    writeDoc(doc, "deadzone", analogToDpadOptions.deadzone);
+    writeDoc(doc, "enableDynamicDeadzone", analogToDpadOptions.enableDynamicDeadzone);
+    writeDoc(doc, "dynamicDeadzone", analogToDpadOptions.dynamicDeadzone);
+    writeDoc(doc, "cardinalAngle", analogToDpadOptions.cardinalAngle);
+    writeDoc(doc, "directionStickyness", analogToDpadOptions.directionStickyness);
+    writeDoc(doc, "AnalogToDpadInputEnabled", analogToDpadOptions.enabled);
 
     const AnalogADS1219Options& analogADS1219Options = Storage::getInstance().getAddonOptions().analogADS1219Options;
     writeDoc(doc, "I2CAnalog1219InputEnabled", analogADS1219Options.enabled);

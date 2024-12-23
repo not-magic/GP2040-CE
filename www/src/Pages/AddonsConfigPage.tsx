@@ -69,6 +69,7 @@ export type AddonPropTypes = {
 	handleCheckbox: (name: keyof typeof DEFAULT_VALUES) => void;
 	setFieldValue: FormikHelpers<typeof DEFAULT_VALUES>['setFieldValue'];
 };
+import AnalogToDpad, { analogToDpadScheme, analogToDpadState } from '../Addons/AnalogToDpad';
 
 const schema = yup.object().shape({
 	...analogScheme,

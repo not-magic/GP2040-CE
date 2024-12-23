@@ -191,4 +191,15 @@ export default {
 	'tg16-extension-data-pin2-label': 'Data GPIO Pin 2 (D_SELECT)',
 	'tg16-extension-data-pin3-label': 'Data GPIO Pin 3 (L_RUN)',
 	'tg16-extension-desc-header': 'PC Engine/TurboGrafx-16 Extension Mapping',
+	'analog-to-dpad-header-text': 'Analog to D-pad',
+	'analog-to-dpad-deadzone-text': 'Deadzone size. A large deadzone makes dashing easier and diagonals harder.',
+	'analog-to-dpad-deadzone-label': 'Deadzone',
+	'analog-to-dpad-switch-slope-text': 'Adjusts the virtual swith angles.',
+	'analog-to-dpad-switch-slope-label': 'Slope',
+	'analog-to-dpad-switch-offset-text': 'Adjusts the virtual switch offset.',
+	'analog-to-dpad-switch-offset-label': 'Offset',
+	'analog-to-dpad-direction-debounce-label': 'Debounce',
+	'analog-to-dpad-direction-debounce-text': 'Debouncing will add stickiness to the virtual triggers to prevent rapid on/off triggers at the boundary positions. High debounce may also assist motion inputs by making the diagonal areas larger only once a cardinal direction has been triggered..',
+	'analog-to-dpad-enable-pin': "Enable Pin"
+
 };

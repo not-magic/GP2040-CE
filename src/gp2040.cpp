@@ -13,6 +13,7 @@
 
 // Inputs for Core0
 #include "addons/analog.h"
+#include "addons/analog_to_dpad.h"
 #include "addons/bootsel_button.h"
 #include "addons/focus_mode.h"
 #include "addons/dualdirectional.h"
