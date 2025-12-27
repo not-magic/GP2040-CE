@@ -884,6 +884,16 @@ message HETriggerOptions
     optional int32 smoothingFactor = 13;
 }
 
+message AnalogToDpadOptions
+{
+    optional bool enabled = 1;
+    optional float squareness = 2;
+    optional float deadzone = 3;
+    optional float slope = 4;
+    optional float offset = 5;
+    optional float debounce = 6;
+}
+
 message AddonOptions
 {
     optional BootselButtonOptions bootselButtonOptions = 1;

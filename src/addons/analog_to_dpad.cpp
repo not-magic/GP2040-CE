@@ -6,21 +6,33 @@
 #include <cmath>
 #include <algorithm>
 
-static uint8_t find_dpad_mask(float x, float y, float cangle) {
+/**
+ * The goal for this add-on is to provide flexible mapping from an analog stick to a digital output
+ * 
+ */
 
-	if (y < -cangle) {
-		return GAMEPAD_MASK_UP;
-	} else if (y > cangle) {
-		return GAMEPAD_MASK_DOWN;
+// returns -1, 0, 1 for the axis. Uses the other axis to calcualate a slope value
+int8_t AnalogToDpad::calc_cardinal(float value, float other_axis_value, float debounce) const {
+
+	const float near_deadzone = _deadzone-debounce;
+	const float dist_squared = (value*value)+(other_axis_value*other_axis_value);
+	if (dist_squared < near_deadzone*near_deadzone) {
+		return 0;
 	}
 
-	if (x < -cangle) {
-		return GAMEPAD_MASK_LEFT;
-	} else if (x > cangle) {
-		return GAMEPAD_MASK_RIGHT;
+	const float offset = _offset-debounce;
+
+	if (value > offset) {
+		if (std::abs(other_axis_value/(value-offset))*_slope < 1) {
+			return 1;
+		}
+	} else if (value < -offset) {
+		if (std::abs(other_axis_value/(value+offset))*_slope < 1) {
+			return -1;
+		}
 	}
 
-	return ((y < 0) ? GAMEPAD_MASK_UP : GAMEPAD_MASK_DOWN) | ((x < 0) ? GAMEPAD_MASK_LEFT : GAMEPAD_MASK_RIGHT);
+	return 0;	
 }
 
 bool AnalogToDpad::available() {
@@ -32,10 +44,11 @@ void AnalogToDpad::setup() {
 
     const AnalogToDpadOptions& options = Storage::getInstance().getAddonOptions().analogToDpadOptions;
 
-	_cardinalAngle = std::cos((float(options.cardinalAngle)/2) * M_PI/180.f);
-	_stickyCardinalAngle = std::cos((float(options.cardinalAngle - options.directionStickyness)/2) * M_PI/180.f);
-	_baseDeadzone = options.deadzone * 0.01f;
-	_dynamicDeadzone = options.enableDynamicDeadzone ? (options.dynamicDeadzone * 0.01f) : 1.0f;
+    _squareness = options.squareness;
+	_deadzone = options.deadzone;
+	_slope = options.slope;
+	_offset = options.offset;
+	_debounce = options.debounce;
 
 	mapAnalogToDpad = nullptr;
 
@@ -67,54 +80,20 @@ void AnalogToDpad::process()
 	    return float(x - GAMEPAD_JOYSTICK_MID)  / float(GAMEPAD_JOYSTICK_MAX - GAMEPAD_JOYSTICK_MID);
 	};
 
-	float ax = map_axis(gamepad->state.lx);
-	float ay = map_axis(gamepad->state.ly);
+	const float ax = map_axis(gamepad->state.lx);
+	const float ay = map_axis(gamepad->state.ly);
 
-	float analog_len = std::sqrt(ax*ax + ay*ay);
+	const float x = std::pow(std::abs(ax), 1+_squareness) * (x > 0 ? 1 : -1);
+	const float y = std::pow(std::abs(ay), 1+_squareness) * (y > 0 ? 1 : -1);
 
-	uint8_t new_dpad_mask = 0;
+	const int8_t result_x = calc_cardinal(x, y, (_lastDpad & (GAMEPAD_MASK_LEFT|GAMEPAD_MASK_RIGHT)) != 0 ? _debounce : 0);
+	const int8_t result_y = calc_cardinal(y, x, (_lastDpad & (GAMEPAD_MASK_UP|GAMEPAD_MASK_DOWN)) != 0 ? _debounce : 0);
 
-	float use_deadzone = _deadzone - (_lastDpad ? 0.05 : 0);
-
-	// magic debounce values
-	if (analog_len > _deadzone) {
-		// normalize this
-		ax /= analog_len;
-		ay /= analog_len;
-
-		analog_len = std::min<float>(1.f, analog_len);
-
-		switch (_lastDpad) {
-
-		case 0:
-		case GAMEPAD_MASK_LEFT:
-		case GAMEPAD_MASK_RIGHT:
-		case GAMEPAD_MASK_DOWN:
-		case GAMEPAD_MASK_UP: {
-				new_dpad_mask = find_dpad_mask(ax, ay, _cardinalAngle);
-			}
-			break;
-
-		default: {
-				new_dpad_mask = find_dpad_mask(ax, ay, _stickyCardinalAngle);
-			}
-		}
-
-		if (_lastDpad == new_dpad_mask) {
-			_deadzone = std::max<float>(_deadzone, analog_len - _dynamicDeadzone);
-			_deadzone = std::min<float>(_deadzone, analog_len + _dynamicDeadzone);
-		} else {
-			_deadzone = _baseDeadzone + 0.01;
-		}
-
-		if (analog_len > _deadzone) {
-			_lastDpad = new_dpad_mask;
-		}
-
-	} else {
-
-		_lastDpad = 0;
-	}
+	_lastDpad = 0
+		| (result_x == 1 ? GAMEPAD_MASK_RIGHT : 0)
+		| (result_x == -1 ? GAMEPAD_MASK_LEFT : 0)
+		| (result_y == 1 ? GAMEPAD_MASK_UP : 0)
+		| (result_y == -1 ? GAMEPAD_MASK_DOWN : 0);
 
     Mask_t values = Storage::getInstance().GetGamepad()->debouncedGpio;
 
