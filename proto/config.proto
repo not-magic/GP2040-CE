@@ -887,11 +887,11 @@ message HETriggerOptions
 message AnalogToDpadOptions
 {
     optional bool enabled = 1;
-    optional float squareness = 2;
-    optional float deadzone = 3;
-    optional float slope = 4;
-    optional float offset = 5;
-    optional float debounce = 6;
+    optional int32 squareness = 2;
+    optional int32 deadzone = 3;
+    optional int32 slope = 4;
+    optional int32 offset = 5;
+    optional int32 debounce = 6;
 }
 
 message AddonOptions

@@ -123,6 +123,7 @@ void GP2040::setup() {
 	addons.LoadAddon(new TG16padInput());
 
 	// Input override addons
+	addons.LoadAddon(new AnalogToDpadAddon()); // replaces analog input with dpad
 	addons.LoadAddon(new ReverseInput());
 	addons.LoadAddon(new TurboInput()); // Turbo overrides button states and should be close to the end
 	addons.LoadAddon(new InputMacro());

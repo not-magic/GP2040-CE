@@ -13,6 +13,7 @@ import { hexToInt } from '../Services/Utilities';
 
 import WebApi from '../Services/WebApi';
 import Analog, { analogScheme, analogState } from '../Addons/Analog';
+import AnalogToDpad, { analogToDpadScheme, analogToDpadState } from '../Addons/AnalogToDpad';
 import Analog1256, {
 	analog1256Scheme,
 	analog1256State,
@@ -69,10 +70,10 @@ export type AddonPropTypes = {
 	handleCheckbox: (name: keyof typeof DEFAULT_VALUES) => void;
 	setFieldValue: FormikHelpers<typeof DEFAULT_VALUES>['setFieldValue'];
 };
-import AnalogToDpad, { analogToDpadScheme, analogToDpadState } from '../Addons/AnalogToDpad';
 
 const schema = yup.object().shape({
 	...analogScheme,
+	...analogToDpadScheme,
 	...analog1256Scheme,
 	...bootselScheme,
 	...onBoardLedScheme,
@@ -96,6 +97,7 @@ const schema = yup.object().shape({
 
 export const DEFAULT_VALUES = {
 	...analogState,
+	...analogToDpadState,
 	...analog1256State,
 	...bootselState,
 	...onBoardLedState,
@@ -123,6 +125,7 @@ const ADDONS = [
 	Bootsel,
 	OnBoardLed,
 	Analog,
+	AnalogToDpad,
 	Turbo,
 	Reverse,
 	I2CAnalog1219,

@@ -577,10 +577,12 @@ app.get('/api/getAddonsOptions', (req, res) => {
 		tg16PadDataPin3: -1,
 		TG16padAddonEnabled: 1,
 		HETriggerEnabled: 1,
-		analogToDpadDeadzone: 0.5,
-		analogToDpadDebounce: 0.2,
-		analogToDpadDiagonalSlope: 0.2,
-		analogToDpadDiagonalOffset: 0.1,
+		analogToDpadSquareness: 0,
+		analogToDpadDeadzone: 50,
+		analogToDpadDebounce: 5,
+		analogToDpadSlope: 20,
+		analogToDpadOffset: 20,
+		AnalogToDpadInputEnabled: 1,
 		usedPins: Object.values(picoController),
 	});
 });

@@ -1722,11 +1722,11 @@ std::string setAddonOptions()
 
 
     AnalogToDpadOptions& analogToDpadOptions = Storage::getInstance().getAddonOptions().analogToDpadOptions;
-    docToValue(analogToDpadOptions.squareness, doc, "analogToDigitalSquareness");
-    docToValue(analogToDpadOptions.deadzone, doc, "analogToDigitalDeadzone");
-    docToValue(analogToDpadOptions.slope, doc, "analogToDigitalSlope");
-    docToValue(analogToDpadOptions.offset, doc, "analogToDigitalOffset");
-    docToValue(analogToDpadOptions.debounce, doc, "analogToDigitalDebounce");
+    docToValue(analogToDpadOptions.squareness, doc, "analogToDpadSquareness");
+    docToValue(analogToDpadOptions.deadzone, doc, "analogToDpadDeadzone");
+    docToValue(analogToDpadOptions.slope, doc, "analogToDpadSlope");
+    docToValue(analogToDpadOptions.offset, doc, "analogToDpadOffset");
+    docToValue(analogToDpadOptions.debounce, doc, "analogToDpadDebounce");
     docToValue(analogToDpadOptions.enabled, doc, "AnalogToDpadInputEnabled");
 
     FocusModeOptions& focusModeOptions = Storage::getInstance().getAddonOptions().focusModeOptions;
@@ -2184,11 +2184,11 @@ std::string getAddonOptions()
     writeDoc(doc, "TiltInputEnabled", tiltOptions.enabled);
 
     const AnalogToDpadOptions& analogToDpadOptions = Storage::getInstance().getAddonOptions().analogToDpadOptions;
-    writeDoc(doc, "analogToDigitalSquareness", analogToDpadOptions.squareness);
-    writeDoc(doc, "analogToDigitalDeadzone", analogToDpadOptions.deadzone);
-    writeDoc(doc, "analogToDigitalSlope", analogToDpadOptions.slope);
-    writeDoc(doc, "analogToDigitalOffset", analogToDpadOptions.offset);
-    writeDoc(doc, "analogToDigitalDebounce", analogToDpadOptions.debounce);
+    writeDoc(doc, "analogToDpadSquareness", analogToDpadOptions.squareness);
+    writeDoc(doc, "analogToDpadDeadzone", analogToDpadOptions.deadzone);
+    writeDoc(doc, "analogToDpadSlope", analogToDpadOptions.slope);
+    writeDoc(doc, "analogToDpadOffset", analogToDpadOptions.offset);
+    writeDoc(doc, "analogToDpadDebounce", analogToDpadOptions.debounce);
     writeDoc(doc, "AnalogToDpadInputEnabled", analogToDpadOptions.enabled);
 
     const AnalogADS1219Options& analogADS1219Options = Storage::getInstance().getAddonOptions().analogADS1219Options;

@@ -8,11 +8,10 @@
 
 /**
  * The goal for this add-on is to provide flexible mapping from an analog stick to a digital output
- * 
  */
 
 // returns -1, 0, 1 for the axis. Uses the other axis to calcualate a slope value
-int8_t AnalogToDpad::calc_cardinal(float value, float other_axis_value, float debounce) const {
+int8_t AnalogToDpadAddon::calc_cardinal(float value, float other_axis_value, float debounce) const {
 
 	const float near_deadzone = _deadzone-debounce;
 	const float dist_squared = (value*value)+(other_axis_value*other_axis_value);
@@ -35,43 +34,40 @@ int8_t AnalogToDpad::calc_cardinal(float value, float other_axis_value, float de
 	return 0;	
 }
 
-bool AnalogToDpad::available() {
+bool AnalogToDpadAddon::available() {
     const AnalogToDpadOptions& options = Storage::getInstance().getAddonOptions().analogToDpadOptions;
     return options.enabled;
 }
 
-void AnalogToDpad::setup() {
+void AnalogToDpadAddon::reinit()
+{
+    _pinMask = 0;
+
+    GpioMappingInfo* pinMappings = Storage::getInstance().getProfilePinMappings();
+    for (Pin_t pin = 0; pin < (Pin_t)NUM_BANK0_GPIOS; pin++)
+    {
+        if ( pinMappings[pin].action == GpioAction::SUSTAIN_ANALOG_TO_DPAD ) {
+            _pinMask |= 1 << pin;
+        }
+    }
+}
+
+void AnalogToDpadAddon::setup() {
 
     const AnalogToDpadOptions& options = Storage::getInstance().getAddonOptions().analogToDpadOptions;
 
-    _squareness = options.squareness;
-	_deadzone = options.deadzone;
-	_slope = options.slope;
-	_offset = options.offset;
-	_debounce = options.debounce;
-
-	mapAnalogToDpad = nullptr;
-
-	GpioMappingInfo* pinMappings = Storage::getInstance().getProfilePinMappings();
-	for (Pin_t pin = 0; pin < (Pin_t)NUM_BANK0_GPIOS; pin++)
-	{
-		switch (pinMappings[pin].action) {
-			case GpioAction::SUSTAIN_ANALOG_TO_DPAD: {
-				mapAnalogToDpad = new GamepadButtonMapping(0);
-				mapAnalogToDpad->pinMask |= 1 << pin;
-				break;
-			}
-
-			default:    break;
-		}
-	}
+    _squareness = options.squareness * 0.04f;
+	_deadzone = options.deadzone * 0.01f;
+	_slope = options.slope * 0.01f;
+	_offset = options.offset * 0.01f;
+	_debounce = options.debounce * 0.01f;
 }
 
-void AnalogToDpad::preprocess()
+void AnalogToDpadAddon::preprocess()
 {
 }
 
-void AnalogToDpad::process()
+void AnalogToDpadAddon::process()
 {
 	Gamepad * gamepad = Storage::getInstance().GetGamepad();
 
@@ -83,8 +79,8 @@ void AnalogToDpad::process()
 	const float ax = map_axis(gamepad->state.lx);
 	const float ay = map_axis(gamepad->state.ly);
 
-	const float x = std::pow(std::abs(ax), 1+_squareness) * (x > 0 ? 1 : -1);
-	const float y = std::pow(std::abs(ay), 1+_squareness) * (y > 0 ? 1 : -1);
+	const float x = std::pow(std::abs(ax), 1+_squareness) * (ax > 0 ? 1 : -1);
+	const float y = std::pow(std::abs(ay), 1+_squareness) * (ay > 0 ? 1 : -1);
 
 	const int8_t result_x = calc_cardinal(x, y, (_lastDpad & (GAMEPAD_MASK_LEFT|GAMEPAD_MASK_RIGHT)) != 0 ? _debounce : 0);
 	const int8_t result_y = calc_cardinal(y, x, (_lastDpad & (GAMEPAD_MASK_UP|GAMEPAD_MASK_DOWN)) != 0 ? _debounce : 0);
@@ -97,7 +93,7 @@ void AnalogToDpad::process()
 
     Mask_t values = Storage::getInstance().GetGamepad()->debouncedGpio;
 
-	if (mapAnalogToDpad == nullptr || values & mapAnalogToDpad->pinMask) {
+	if (_pinMask == 0 || (values & _pinMask)) {
 		gamepad->state.dpad = _lastDpad;
 		gamepad->state.lx = GAMEPAD_JOYSTICK_MID;
 		gamepad->state.ly = GAMEPAD_JOYSTICK_MID;

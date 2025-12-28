@@ -29,14 +29,16 @@
 #define ANALOG_TO_DPAD_DEBOUNCE 5
 #endif
 
-class AnalogToDpad : public GPAddon {
+class AnalogToDpadAddon : public GPAddon {
 public:
 	virtual std::string name() { return "Analog To D-pad"; }
 
 	bool available() override;
+	void reinit() override;
 	void setup() override;
 	void process() override;
 	void preprocess() override;
+	void postprocess(bool sent) override {}
 private:
 
 	int8_t calc_cardinal(float axis, float other_axis, float debounce) const;
@@ -49,8 +51,7 @@ private:
 	float _offset = ANALOG_TO_DPAD_OFFSET * 0.01f;
 
 	uint8_t _lastDpad = 0;
-
-	GamepadButtonMapping *mapAnalogToDpad = nullptr;
+	Mask_t _pinMask = 0;	
 };
 
 #endif  // _AnalogToDpad_H
