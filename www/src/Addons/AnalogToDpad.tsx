@@ -1,8 +1,9 @@
 import React, {useRef, useEffect} from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { FormCheck, Row } from 'react-bootstrap';
+import { FormCheck, Row, Col } from 'react-bootstrap';
 import * as yup from 'yup';
 
+import Canvas from '../Components/Section';
 import Section from '../Components/Section';
 import FormSelect from '../Components/FormSelect';
 import FormControl from '../Components/FormControl';
@@ -44,7 +45,6 @@ export const analogToDpadState = {
 const AnalogToDpad = ({ values, errors, handleChange, handleCheckbox }: AddonPropTypes) => {
 	const { t } = useTranslation();
 	const canvasRef = useRef<HTMLCanvasElement>(null);
-	//const frameRef = useRef<number>(0);
 
 	useEffect(() => {
 		const squareness = values.analogToDpadSquareness * 0.04;
@@ -52,6 +52,36 @@ const AnalogToDpad = ({ values, errors, handleChange, handleCheckbox }: AddonPro
 		const debounce = values.analogToDpadDebounce * 0.01;
 		const cardinal_slope = values.analogToDpadSlope * 0.01;
 		const cardinal_offset = values.analogToDpadOffset * 0.01;
+
+		function mix_colors(a, b) {
+			return [
+					(a[0]+b[0])/2,
+					(a[1]+b[1])/2,
+					(a[2]+b[2])/2
+				];
+		}
+
+		function hexToRgb(hex) {
+		  // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+		  var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+		  hex = hex.replace(shorthandRegex, function(m, r, g, b) {
+		    return r + r + g + g + b + b;
+		  });
+
+		  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+		  return result ? [
+		    parseInt(result[1], 16),
+		    parseInt(result[2], 16),
+		    parseInt(result[3], 16)
+			] : [255, 0, 255];
+		}
+
+
+		const style = getComputedStyle(document.body);
+		const deadzone_color = hexToRgb(style.getPropertyValue("--bs-dark"));
+		const diagonal_color = hexToRgb(style.getPropertyValue("--bs-pink"));
+		const cardinal_color = hexToRgb(style.getPropertyValue("--bs-teal"));
+		const debounce_color = hexToRgb(style.getPropertyValue("--bs-yellow"));
 
 		function colorFunction(x:float, y:float) {
 
@@ -87,21 +117,25 @@ const AnalogToDpad = ({ values, errors, handleChange, handleCheckbox }: AddonPro
 			const ny = cardinal(y, x, debounce);
 
 			if (ix && iy) {
-				return [255, 0, 0];
+				return diagonal_color;
 			} else if ((nx && iy) || (ny && ix)) {
-				return [255, 255, 0];
+				return debounce_color;
 			} else if (nx && ny) {
-				return [127, 127, 0];
+				return mix_colors(debounce_color, deadzone_color);
 			} else if (ix || iy) {
-				return [0, 255, 0];
+				return cardinal_color;
 			} else if (nx || ny) {
-				return [0, 127, 0];
+				return mix_colors(cardinal_color, deadzone_color);
 			}
 
-			return [0,0,0];
+			return deadzone_color;
 		}
 
 		function render() {
+			if (!values.AnalogToDpadInputEnabled) {
+				return;
+			}
+
 			let canvas = canvasRef.current;
 			const ctx = canvas.getContext('2d');
 
@@ -116,12 +150,10 @@ const AnalogToDpad = ({ values, errors, handleChange, handleCheckbox }: AddonPro
 	                const x = (px / width) * 2 - 1;
 	                const y = (py / height) * 2 - 1;
 
-	                // Get color from user function
 	                const [r, g, b] = colorFunction(x, y);
 
-	                // Set pixel color
 	                const index = (py * width + px) * 4;
-	                imageData.data[index + 0] = r;     // R
+	                imageData.data[index + 0] = r; // R
 	                imageData.data[index + 1] = g; // G
 	                imageData.data[index + 2] = b; // B
 	                imageData.data[index + 3] = 255; // A
@@ -133,7 +165,7 @@ const AnalogToDpad = ({ values, errors, handleChange, handleCheckbox }: AddonPro
 
 		render();
 
-	}, [canvasRef, values]);
+	}, [values.AnalogToDpadInputEnabled, values.analogToDpadSquareness, values.analogToDpadDeadzone, values.analogToDpadDebounce, values.analogToDpadSlope, values.analogToDpadOffset]);
 
 	return (
 		<Section title={t('AddonsConfig:analog-to-dpad-header-text')}>
@@ -150,9 +182,11 @@ const AnalogToDpad = ({ values, errors, handleChange, handleCheckbox }: AddonPro
 								target="_blank"
 							/>
 						]}
-					/>				</div>
-				<canvas ref={canvasRef} width="500" height="500"/>
-				<Row className="mb-3">
+					/>
+				</div>
+				<Row>
+				<Col sm={4}><center><canvas ref={canvasRef} width="300" height="300"/></center></Col>
+				<Col><Row className="mb-3">
 					<p>{t('AddonsConfig:analog-to-dpad-deadzone-text')}</p>
 
 					<FormControl
@@ -229,7 +263,8 @@ const AnalogToDpad = ({ values, errors, handleChange, handleCheckbox }: AddonPro
 						min={0}
 						max={100}
 					/>						
-				</Row>
+				</Row></Col>
+			</Row>
 			</div>
 			<FormCheck
 				label={t('Common:switch-enabled')}

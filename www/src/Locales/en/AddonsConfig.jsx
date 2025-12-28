@@ -192,11 +192,11 @@ export default {
 	'tg16-extension-data-pin3-label': 'Data GPIO Pin 3 (L_RUN)',
 	'tg16-extension-desc-header': 'PC Engine/TurboGrafx-16 Extension Mapping',
 	'analog-to-dpad-header-text': 'Analog to D-pad',
-	'analog-to-dpad-deadzone-text': 'A large deadzone makes dashing easier and diagonals harder. Squareness warps the deadzone shape to be a square.',
+	'analog-to-dpad-deadzone-text': 'Squareness warps the deadzone shape to be a square, which is more like a physical stick.',
 	'analog-to-dpad-deadzone-label': 'Deadzone Size (%)',
 	'analog-to-dpad-debounce-label': 'Debounce (%)',
 	'analog-to-dpad-squareness-label': 'Squareness',
-	'analog-to-dpad-switch-slope-offset-text': 'Adjusts the virtual switch angle and position. Debouncing is the distance between the virtual switch turning on and off',
+	'analog-to-dpad-switch-slope-offset-text': 'Slope and size adjusts the virtual switch angle and position. Debouncing is the distance between the virtual switch turning on and off.',
 	'analog-to-dpad-switch-slope-label': 'Cardinal Slope (%)',
 	'analog-to-dpad-switch-offset-label': 'Cardinal Size (%)',
 	'analog-to-dpad-enable-pin': "Enable Pin"
