@@ -10,30 +10,6 @@
  * The goal for this add-on is to provide flexible mapping from an analog stick to a digital output
  */
 
-// returns -1, 0, 1 for the axis. Uses the other axis to calcualate a slope value
-int8_t AnalogToDpadAddon::calc_cardinal(float value, float other_axis_value, float debounce) const {
-
-	const float near_deadzone = _deadzone-debounce;
-	const float dist_squared = (value*value)+(other_axis_value*other_axis_value);
-	if (dist_squared < near_deadzone*near_deadzone) {
-		return 0;
-	}
-
-	const float offset = _offset-debounce;
-
-	if (value > offset) {
-		if (std::abs(other_axis_value/(value-offset))*_slope < 1) {
-			return 1;
-		}
-	} else if (value < -offset) {
-		if (std::abs(other_axis_value/(value+offset))*_slope < 1) {
-			return -1;
-		}
-	}
-
-	return 0;	
-}
-
 bool AnalogToDpadAddon::available() {
     const AnalogToDpadOptions& options = Storage::getInstance().getAddonOptions().analogToDpadOptions;
     return options.enabled;
@@ -41,26 +17,30 @@ bool AnalogToDpadAddon::available() {
 
 void AnalogToDpadAddon::reinit()
 {
-    _pinMask = 0;
+    _enablePinMask = 0;
+    _4wayPinMask = 0;
 
     GpioMappingInfo* pinMappings = Storage::getInstance().getProfilePinMappings();
     for (Pin_t pin = 0; pin < (Pin_t)NUM_BANK0_GPIOS; pin++)
     {
-        if ( pinMappings[pin].action == GpioAction::SUSTAIN_ANALOG_TO_DPAD ) {
-            _pinMask |= 1 << pin;
-        }
+    	switch (pinMappings[pin].action) {
+    	case GpioAction::SUSTAIN_ANALOG_TO_DPAD:
+    		_enablePinMask |= 1 << pin;
+    		break;
+
+    	case GpioAction::SUSTAIN_4_8_WAY_MODE:
+    		_4wayPinMask |= 1 << pin;
+    		break;
+
+    	default:
+    		break;
+    	}
     }
 }
 
 void AnalogToDpadAddon::setup() {
-
-    const AnalogToDpadOptions& options = Storage::getInstance().getAddonOptions().analogToDpadOptions;
-
-    _squareness = options.squareness * 0.04f;
-	_deadzone = options.deadzone * 0.01f;
-	_slope = options.slope * 0.01f;
-	_offset = options.offset * 0.01f;
-	_debounce = options.debounce * 0.01f;
+    const GamepadOptions& gamepad_options = Storage::getInstance().getGamepadOptions();
+	_4wayMode = gamepad_options.fourWayMode;
 }
 
 void AnalogToDpadAddon::preprocess()
@@ -69,21 +49,95 @@ void AnalogToDpadAddon::preprocess()
 
 void AnalogToDpadAddon::process()
 {
-	Gamepad * gamepad = Storage::getInstance().GetGamepad();
+	Gamepad * const gamepad = Storage::getInstance().GetGamepad();
+    const AnalogToDpadOptions& options = Storage::getInstance().getAddonOptions().analogToDpadOptions;
 
 	auto map_axis = [](uint16_t x) {
 
 	    return float(x - GAMEPAD_JOYSTICK_MID)  / float(GAMEPAD_JOYSTICK_MAX - GAMEPAD_JOYSTICK_MID);
 	};
 
-	const float ax = map_axis(gamepad->state.lx);
-	const float ay = map_axis(gamepad->state.ly);
+	const bool read_left_stick = options.source == ANALOG_TO_DPAD_SOURCE_1;
 
-	const float x = std::pow(std::abs(ax), 1+_squareness) * (ax > 0 ? 1 : -1);
-	const float y = std::pow(std::abs(ay), 1+_squareness) * (ay > 0 ? 1 : -1);
+	// source analog x/y values
+	const float ax = map_axis(read_left_stick ? gamepad->state.lx : gamepad->state.rx);
+	const float ay = map_axis(read_left_stick ? gamepad->state.ly : gamepad->state.rx);
 
-	const int8_t result_x = calc_cardinal(x, y, (_lastDpad & (GAMEPAD_MASK_LEFT|GAMEPAD_MASK_RIGHT)) != 0 ? _debounce : 0);
-	const int8_t result_y = calc_cardinal(y, x, (_lastDpad & (GAMEPAD_MASK_UP|GAMEPAD_MASK_DOWN)) != 0 ? _debounce : 0);
+    const Mask_t values = gamepad->debouncedGpio;
+	const bool use_4way = _4wayMode || (values & _4wayPinMask) != 0;
+
+	const float deadzone = (use_4way ? options.deadzone4 :options.deadzone8) * 0.01f;
+	const float squareness = (use_4way ? options.squareness4 : options.squareness8) * 0.04f;
+
+	// this fixes the zoom caused by squareness mapping, so the deadzone size remains constant
+	const float deadzone_scale = deadzone / std::pow(std::abs(deadzone), 1+squareness);
+
+	const float x = std::pow(std::abs(ax), 1+squareness) * (ax > 0 ? 1 : -1) * deadzone_scale;
+	const float y = std::pow(std::abs(ay), 1+squareness) * (ay > 0 ? 1 : -1) * deadzone_scale;
+
+	const float debounce = (use_4way ? options.debounce4 : options.debounce8) * 0.01f;
+	const float debounce_x = (_lastDpad & (GAMEPAD_MASK_LEFT|GAMEPAD_MASK_RIGHT)) != 0 ? debounce : 0;
+	const float debounce_y = (_lastDpad & (GAMEPAD_MASK_UP|GAMEPAD_MASK_DOWN)) != 0 ? debounce : 0;
+
+	int result_x = 0;
+	int result_y = 0;
+
+	if (use_4way) {
+
+		// 4-way mode will only ever have one of these active at a time
+		const float debounced_deadzone = deadzone - (debounce_x + debounce_y);
+
+		const float dist_squared = (x*x)+(y*y);
+		const float offset = options.offset4 * 0.01f;
+		const float offset_x = offset - debounce_x;
+		const float offset_y = offset - debounce_y;
+
+		if (dist_squared > debounced_deadzone*debounced_deadzone && (std::abs(x) > offset_x || std::abs(y) > offset_y)) {
+
+			// if we're in the active region we always return one value, based on whichever is longest after debouncing
+
+			if (std::abs(x)+debounce_x > std::abs(y)+debounce_y) {
+
+				result_x = x > 0 ? 1 : -1;
+
+			} else {
+
+				result_y = y > 0 ? 1 : -1;
+			}
+		}		
+
+	} else {
+
+		const float slope = options.slope8 * 0.01f;
+
+		auto calc_cardinal = [slope](float value, float other_axis_value, float deadzone, float offset) {
+
+			const float dist_squared = (value*value)+(other_axis_value*other_axis_value);
+			if (dist_squared < deadzone*deadzone) {
+				return 0;
+			}
+
+			if (value > offset) {
+
+				if (std::abs(other_axis_value/(value-offset))*slope < 1) {
+					return 1;
+				}			
+			} else if (value < -offset) {
+				if (std::abs(other_axis_value/(value+offset))*slope < 1) {
+					return -1;
+				}			
+			}
+
+			return 0;	
+		};
+
+		const float debounce_x = (_lastDpad & (GAMEPAD_MASK_LEFT|GAMEPAD_MASK_RIGHT)) != 0 ? options.debounce8 * 0.01f : 0;
+		const float debounce_y = (_lastDpad & (GAMEPAD_MASK_UP|GAMEPAD_MASK_DOWN)) != 0 ? options.debounce8 * 0.01f : 0;
+		const float offset = options.offset8 * 0.01f;
+
+		result_x = calc_cardinal(x, y, deadzone - debounce_x, offset - debounce_x);
+		result_y = calc_cardinal(y, x, deadzone - debounce_y, offset - debounce_y);
+	}
 
 	_lastDpad = 0
 		| (result_x == 1 ? GAMEPAD_MASK_RIGHT : 0)
@@ -91,9 +145,7 @@ void AnalogToDpadAddon::process()
 		| (result_y == 1 ? GAMEPAD_MASK_UP : 0)
 		| (result_y == -1 ? GAMEPAD_MASK_DOWN : 0);
 
-    Mask_t values = Storage::getInstance().GetGamepad()->debouncedGpio;
-
-	if (_pinMask == 0 || (values & _pinMask)) {
+	if (_enablePinMask == 0 || (values & _enablePinMask) != 0) {
 		gamepad->state.dpad = _lastDpad;
 		gamepad->state.lx = GAMEPAD_JOYSTICK_MID;
 		gamepad->state.ly = GAMEPAD_JOYSTICK_MID;

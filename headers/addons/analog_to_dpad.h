@@ -5,30 +5,6 @@
 
 #include "GamepadEnums.h"
 
-#ifndef ANALOG_TO_DPAD_ENABLED
-#define ANALOG_TO_DPAD_ENABLED 0
-#endif
-
-#ifndef ANALOG_TO_DPAD_DEADZONE
-#define ANALOG_TO_DPAD_DEADZONE 30
-#endif
-
-#ifndef ANALOG_TO_DPAD_SQUARENESS
-#define ANALOG_TO_DPAD_SQUARENESS 10
-#endif
-
-#ifndef ANALOG_TO_DPAD_SLOPE
-#define ANALOG_TO_DPAD_SLOPE 20
-#endif
-
-#ifndef ANALOG_TO_DPAD_OFFSET
-#define ANALOG_TO_DPAD_OFFSET 20
-#endif
-
-#ifndef ANALOG_TO_DPAD_DEBOUNCE
-#define ANALOG_TO_DPAD_DEBOUNCE 5
-#endif
-
 class AnalogToDpadAddon : public GPAddon {
 public:
 	virtual std::string name() { return "Analog To D-pad"; }
@@ -41,17 +17,10 @@ public:
 	void postprocess(bool sent) override {}
 private:
 
-	int8_t calc_cardinal(float axis, float other_axis, float debounce) const;
-
-	// options
-	float _squareness = ANALOG_TO_DPAD_SQUARENESS * 0.01f;
-	float _slope = ANALOG_TO_DPAD_SLOPE * 0.01f;
-	float _debounce = ANALOG_TO_DPAD_DEBOUNCE * 0.01f;
-	float _deadzone = ANALOG_TO_DPAD_DEADZONE * 0.01f;
-	float _offset = ANALOG_TO_DPAD_OFFSET * 0.01f;
-
 	uint8_t _lastDpad = 0;
-	Mask_t _pinMask = 0;	
+	Mask_t _enablePinMask = 0;
+	Mask_t _4wayPinMask = 0;
+	bool _4wayMode = false;
 };
 
 #endif  // _AnalogToDpad_H

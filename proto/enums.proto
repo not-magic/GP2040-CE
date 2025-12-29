@@ -701,3 +701,11 @@ enum MouseMovementMode
     MOUSE_MOVEMENT_LEFT_ANALOG = 1;
     MOUSE_MOVEMENT_RIGHT_ANALOG = 2;
 };
+
+enum AnalogToDpadSource
+{
+    option (nanopb_enumopt).long_names = false;
+
+    ANALOG_TO_DPAD_SOURCE_1 = 0;
+    ANALOG_TO_DPAD_SOURCE_2 = 1;
+};

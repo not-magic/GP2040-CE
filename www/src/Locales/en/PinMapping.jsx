@@ -100,6 +100,6 @@ export default {
 		MENU_NAVIGATION_SELECT: 'Menu Select',
 		MENU_NAVIGATION_BACK: 'Menu Back',
 		MENU_NAVIGATION_TOGGLE: 'Menu Toggle',
-		SUSTAIN_ANALOG_TO_DPAD: 'Analog to D-pad Enable',
+		SUSTAIN_ANALOG_TO_DPAD: 'Analog to D-pad Enable'
 	},
 };

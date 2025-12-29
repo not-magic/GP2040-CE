@@ -28,6 +28,31 @@ const rgbArrayToHex = (values) => {
 	return `#${intToHex(r)}${intToHex(g)}${intToHex(b)}`;
 };
 
+const rgbMix = (x, y, a) => {
+
+	const one_minus_a = 1-a;
+	return [
+		x[0] * one_minus_a + y[0] * a,
+		x[1] * one_minus_a + y[1] * a,
+		x[2] * one_minus_a + y[2] * a
+	];
+};
+
+const hexToRgbArray = (hex, error_color = [255,0,255]) => {
+  // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+  var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+  hex = hex.replace(shorthandRegex, function(m, r, g, b) {
+    return r + r + g + g + b + b;
+  });
+
+  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? [
+    parseInt(result[1], 16),
+    parseInt(result[2], 16),
+    parseInt(result[3], 16)
+	] : error_color;
+};
+
 const rgbWheel = (pos) => {
 	pos = 255 - pos;
 	if (pos < 85) {
@@ -49,4 +74,4 @@ Object.fromEntries(
 	) as Record<keyof T, T[keyof T]>;
 
 
-export { hexToInt, intToHex, rgbArrayToHex, rgbIntToHex, rgbWheel, createEnumRecord };
+export { hexToInt, intToHex, rgbArrayToHex, hexToRgbArray, rgbIntToHex, rgbMix, rgbWheel, createEnumRecord };
