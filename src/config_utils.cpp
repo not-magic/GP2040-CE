@@ -622,6 +622,19 @@ void ConfigUtils::initUnsetPropertiesWithDefaults(Config& config)
     INIT_UNSET_PROPERTY(config.addonOptions.analogOptions, auto_calibrate2, !!AUTO_CALIBRATE2_ENABLED);
     INIT_UNSET_PROPERTY(config.addonOptions.analogOptions, forced_circularity2, !!FORCED_CIRCULARITY2_ENABLED);
 
+    // addonOptions.analogToDpadOptions
+    INIT_UNSET_PROPERTY(config.addonOptions.analogToDpadOptions, enabled, !!ANALOG_TO_DPAD_ENABLED);
+    INIT_UNSET_PROPERTY(config.addonOptions.analogToDpadOptions, squareness8, ANALOG_TO_DPAD_8WAY_SQUARENESS);
+    INIT_UNSET_PROPERTY(config.addonOptions.analogToDpadOptions, deadzone8, ANALOG_TO_DPAD_8WAY_DEADZONE);
+    INIT_UNSET_PROPERTY(config.addonOptions.analogToDpadOptions, slope8, ANALOG_TO_DPAD_8WAY_SLOPE);
+    INIT_UNSET_PROPERTY(config.addonOptions.analogToDpadOptions, offset8, ANALOG_TO_DPAD_8WAY_OFFSET);
+    INIT_UNSET_PROPERTY(config.addonOptions.analogToDpadOptions, debounce8, ANALOG_TO_DPAD_8WAY_DEBOUNCE);
+    INIT_UNSET_PROPERTY(config.addonOptions.analogToDpadOptions, squareness4, ANALOG_TO_DPAD_4WAY_SQUARENESS);
+    INIT_UNSET_PROPERTY(config.addonOptions.analogToDpadOptions, deadzone4, ANALOG_TO_DPAD_4WAY_DEADZONE);
+    INIT_UNSET_PROPERTY(config.addonOptions.analogToDpadOptions, offset4, ANALOG_TO_DPAD_4WAY_OFFSET);
+    INIT_UNSET_PROPERTY(config.addonOptions.analogToDpadOptions, debounce4, ANALOG_TO_DPAD_4WAY_DEBOUNCE);
+    INIT_UNSET_PROPERTY(config.addonOptions.analogToDpadOptions, source, ANALOG_TO_DPAD_SOURCE);
+
     // addonOptions.turboOptions
     INIT_UNSET_PROPERTY(config.addonOptions.turboOptions, enabled, !!TURBO_ENABLED);
     INIT_UNSET_PROPERTY(config.addonOptions.turboOptions, deprecatedButtonPin, (Pin_t)-1);

@@ -104,7 +104,7 @@ void AnalogToDpadAddon::process()
 
 				result_y = y > 0 ? 1 : -1;
 			}
-		}		
+		}
 
 	} else {
 
@@ -142,8 +142,8 @@ void AnalogToDpadAddon::process()
 	_lastDpad = 0
 		| (result_x == 1 ? GAMEPAD_MASK_RIGHT : 0)
 		| (result_x == -1 ? GAMEPAD_MASK_LEFT : 0)
-		| (result_y == 1 ? GAMEPAD_MASK_UP : 0)
-		| (result_y == -1 ? GAMEPAD_MASK_DOWN : 0);
+		| (result_y == 1 ? GAMEPAD_MASK_DOWN : 0)
+		| (result_y == -1 ? GAMEPAD_MASK_UP : 0);
 
 	if (_enablePinMask == 0 || (values & _enablePinMask) != 0) {
 		gamepad->state.dpad = _lastDpad;
