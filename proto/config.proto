@@ -887,15 +887,15 @@ message HETriggerOptions
 message AnalogToDpadOptions
 {
     optional bool enabled = 1;
-    optional int32 squareness8 = 2;
-    optional int32 deadzone8 = 3;
-    optional int32 slope8 = 4;
-    optional int32 offset8 = 5;
-    optional int32 debounce8 = 6;
-    optional int32 squareness4 = 7;
-    optional int32 deadzone4 = 8;
-    optional int32 offset4 = 9;
-    optional int32 debounce4 = 10;
+    optional int32 squareness_8way = 2;
+    optional int32 deadzone_8way = 3;
+    optional int32 slope_8way = 4;
+    optional int32 offset_8way = 5;
+    optional int32 debounce_8way = 6;
+    optional int32 squareness_4way = 7;
+    optional int32 deadzone_4way = 8;
+    optional int32 offset_4way = 9;
+    optional int32 debounce_4way = 10;
     optional AnalogToDpadSource source = 11;
 }
 

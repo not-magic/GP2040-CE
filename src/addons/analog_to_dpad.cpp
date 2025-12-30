@@ -64,8 +64,8 @@ void AnalogToDpadAddon::process()
   const Mask_t values = gamepad->debouncedGpio;
 	const bool use_4way = _4wayMode || (values & _4wayPinMask) != 0;
 
-	const float deadzone = (use_4way ? options.deadzone4 : options.deadzone8) * 0.01f;
-	const float squareness = (use_4way ? options.squareness4 : options.squareness8) * 0.02f;
+	const float deadzone = (use_4way ? options.deadzone_4way : options.deadzone_8way) * 0.01f;
+	const float squareness = (use_4way ? options.squareness_4way : options.squareness_8way) * 0.02f;
 
 	// this fixes the zoom caused by squareness mapping, so the deadzone size remains constant
 	const float deadzone_scale = deadzone > 0 ? (deadzone / std::pow(std::abs(deadzone), 1+squareness)) : 1.0f;
@@ -73,7 +73,7 @@ void AnalogToDpadAddon::process()
 	const float x = std::pow(std::abs(ax), 1+squareness) * (ax > 0 ? 1 : -1) * deadzone_scale;
 	const float y = std::pow(std::abs(ay), 1+squareness) * (ay > 0 ? 1 : -1) * deadzone_scale;
 
-	const float debounce = (use_4way ? options.debounce4 : options.debounce8) * 0.01f;
+	const float debounce = (use_4way ? options.debounce_4way : options.debounce_8way) * 0.01f;
 	const float debounce_x = (_lastDpad & (GAMEPAD_MASK_LEFT|GAMEPAD_MASK_RIGHT)) != 0 ? debounce : 0;
 	const float debounce_y = (_lastDpad & (GAMEPAD_MASK_UP|GAMEPAD_MASK_DOWN)) != 0 ? debounce : 0;
 
@@ -86,7 +86,7 @@ void AnalogToDpadAddon::process()
 		const float debounced_deadzone = std::max(0.f, deadzone - (debounce_x + debounce_y));
 
 		const float dist_squared = (x*x)+(y*y);
-		const float offset = options.offset4 * 0.01f;
+		const float offset = options.offset_4way * 0.01f;
 		const float offset_x = offset - debounce_x;
 		const float offset_y = offset - debounce_y;
 
@@ -107,7 +107,7 @@ void AnalogToDpadAddon::process()
 
 	} else {
 
-		const float slope = options.slope8 * 0.01f;
+		const float slope = options.slope_8way * 0.01f;
 
 		auto calc_cardinal = [slope](float value, float other_axis_value, float deadzone, float offset) {
 
@@ -130,7 +130,7 @@ void AnalogToDpadAddon::process()
 			return 0;
 		};
 
-		const float offset = options.offset8 * 0.01f;
+		const float offset = options.offset_8way * 0.01f;
 
 		result_x = calc_cardinal(x, y, std::max(0.f, deadzone - debounce_x), offset - debounce_x);
 		result_y = calc_cardinal(y, x, std::max(0.f, deadzone - debounce_y), offset - debounce_y);

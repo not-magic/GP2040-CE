@@ -624,15 +624,15 @@ void ConfigUtils::initUnsetPropertiesWithDefaults(Config& config)
 
     // addonOptions.analogToDpadOptions
     INIT_UNSET_PROPERTY(config.addonOptions.analogToDpadOptions, enabled, !!ANALOG_TO_DPAD_ENABLED);
-    INIT_UNSET_PROPERTY(config.addonOptions.analogToDpadOptions, squareness8, ANALOG_TO_DPAD_8WAY_SQUARENESS);
-    INIT_UNSET_PROPERTY(config.addonOptions.analogToDpadOptions, deadzone8, ANALOG_TO_DPAD_8WAY_DEADZONE);
-    INIT_UNSET_PROPERTY(config.addonOptions.analogToDpadOptions, slope8, ANALOG_TO_DPAD_8WAY_SLOPE);
-    INIT_UNSET_PROPERTY(config.addonOptions.analogToDpadOptions, offset8, ANALOG_TO_DPAD_8WAY_OFFSET);
-    INIT_UNSET_PROPERTY(config.addonOptions.analogToDpadOptions, debounce8, ANALOG_TO_DPAD_8WAY_DEBOUNCE);
-    INIT_UNSET_PROPERTY(config.addonOptions.analogToDpadOptions, squareness4, ANALOG_TO_DPAD_4WAY_SQUARENESS);
-    INIT_UNSET_PROPERTY(config.addonOptions.analogToDpadOptions, deadzone4, ANALOG_TO_DPAD_4WAY_DEADZONE);
-    INIT_UNSET_PROPERTY(config.addonOptions.analogToDpadOptions, offset4, ANALOG_TO_DPAD_4WAY_OFFSET);
-    INIT_UNSET_PROPERTY(config.addonOptions.analogToDpadOptions, debounce4, ANALOG_TO_DPAD_4WAY_DEBOUNCE);
+    INIT_UNSET_PROPERTY(config.addonOptions.analogToDpadOptions, squareness_8way, ANALOG_TO_DPAD_8WAY_SQUARENESS);
+    INIT_UNSET_PROPERTY(config.addonOptions.analogToDpadOptions, deadzone_8way, ANALOG_TO_DPAD_8WAY_DEADZONE);
+    INIT_UNSET_PROPERTY(config.addonOptions.analogToDpadOptions, slope_8way, ANALOG_TO_DPAD_8WAY_SLOPE);
+    INIT_UNSET_PROPERTY(config.addonOptions.analogToDpadOptions, offset_8way, ANALOG_TO_DPAD_8WAY_OFFSET);
+    INIT_UNSET_PROPERTY(config.addonOptions.analogToDpadOptions, debounce_8way, ANALOG_TO_DPAD_8WAY_DEBOUNCE);
+    INIT_UNSET_PROPERTY(config.addonOptions.analogToDpadOptions, squareness_4way, ANALOG_TO_DPAD_4WAY_SQUARENESS);
+    INIT_UNSET_PROPERTY(config.addonOptions.analogToDpadOptions, deadzone_4way, ANALOG_TO_DPAD_4WAY_DEADZONE);
+    INIT_UNSET_PROPERTY(config.addonOptions.analogToDpadOptions, offset_4way, ANALOG_TO_DPAD_4WAY_OFFSET);
+    INIT_UNSET_PROPERTY(config.addonOptions.analogToDpadOptions, debounce_4way, ANALOG_TO_DPAD_4WAY_DEBOUNCE);
     INIT_UNSET_PROPERTY(config.addonOptions.analogToDpadOptions, source, ANALOG_TO_DPAD_SOURCE);
 
     // addonOptions.turboOptions

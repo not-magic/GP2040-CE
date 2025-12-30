@@ -1721,15 +1721,15 @@ std::string setAddonOptions()
     docToValue(tiltOptions.enabled, doc, "TiltInputEnabled");
 
     AnalogToDpadOptions& analogToDpadOptions = Storage::getInstance().getAddonOptions().analogToDpadOptions;
-    docToValue(analogToDpadOptions.squareness8, doc, "analogToDpad8WaySquareness");
-    docToValue(analogToDpadOptions.deadzone8, doc, "analogToDpad8WayDeadzone");
-    docToValue(analogToDpadOptions.slope8, doc, "analogToDpad8WaySlope");
-    docToValue(analogToDpadOptions.offset8, doc, "analogToDpad8WayOffset");
-    docToValue(analogToDpadOptions.debounce8, doc, "analogToDpad8WayDebounce");
-    docToValue(analogToDpadOptions.squareness4, doc, "analogToDpad4WaySquareness");
-    docToValue(analogToDpadOptions.deadzone4, doc, "analogToDpad4WayDeadzone");
-    docToValue(analogToDpadOptions.offset4, doc, "analogToDpad4WayOffset");
-    docToValue(analogToDpadOptions.debounce4, doc, "analogToDpad4WayDebounce");
+    docToValue(analogToDpadOptions.squareness_8way, doc, "analogToDpad8WaySquareness");
+    docToValue(analogToDpadOptions.deadzone_8way, doc, "analogToDpad8WayDeadzone");
+    docToValue(analogToDpadOptions.slope_8way, doc, "analogToDpad8WaySlope");
+    docToValue(analogToDpadOptions.offset_8way, doc, "analogToDpad8WayOffset");
+    docToValue(analogToDpadOptions.debounce_8way, doc, "analogToDpad8WayDebounce");
+    docToValue(analogToDpadOptions.squareness_4way, doc, "analogToDpad4WaySquareness");
+    docToValue(analogToDpadOptions.deadzone_4way, doc, "analogToDpad4WayDeadzone");
+    docToValue(analogToDpadOptions.offset_4way, doc, "analogToDpad4WayOffset");
+    docToValue(analogToDpadOptions.debounce_4way, doc, "analogToDpad4WayDebounce");
     docToValue(analogToDpadOptions.source, doc, "analogToDpadSource");
     docToValue(analogToDpadOptions.enabled, doc, "AnalogToDpadInputEnabled");
 
@@ -2188,15 +2188,15 @@ std::string getAddonOptions()
     writeDoc(doc, "TiltInputEnabled", tiltOptions.enabled);
 
     const AnalogToDpadOptions& analogToDpadOptions = Storage::getInstance().getAddonOptions().analogToDpadOptions;
-    writeDoc(doc, "analogToDpad8WaySquareness", analogToDpadOptions.squareness8);
-    writeDoc(doc, "analogToDpad8WayDeadzone", analogToDpadOptions.deadzone8);
-    writeDoc(doc, "analogToDpad8WaySlope", analogToDpadOptions.slope8);
-    writeDoc(doc, "analogToDpad8WayOffset", analogToDpadOptions.offset8);
-    writeDoc(doc, "analogToDpad8WayDebounce", analogToDpadOptions.debounce8);
-    writeDoc(doc, "analogToDpad4WaySquareness", analogToDpadOptions.squareness4);
-    writeDoc(doc, "analogToDpad4WayDeadzone", analogToDpadOptions.deadzone4);
-    writeDoc(doc, "analogToDpad4WayOffset", analogToDpadOptions.offset4);
-    writeDoc(doc, "analogToDpad4WayDebounce", analogToDpadOptions.debounce4);
+    writeDoc(doc, "analogToDpad8WaySquareness", analogToDpadOptions.squareness_8way);
+    writeDoc(doc, "analogToDpad8WayDeadzone", analogToDpadOptions.deadzone_8way);
+    writeDoc(doc, "analogToDpad8WaySlope", analogToDpadOptions.slope_8way);
+    writeDoc(doc, "analogToDpad8WayOffset", analogToDpadOptions.offset_8way);
+    writeDoc(doc, "analogToDpad8WayDebounce", analogToDpadOptions.debounce_8way);
+    writeDoc(doc, "analogToDpad4WaySquareness", analogToDpadOptions.squareness_4way);
+    writeDoc(doc, "analogToDpad4WayDeadzone", analogToDpadOptions.deadzone_4way);
+    writeDoc(doc, "analogToDpad4WayOffset", analogToDpadOptions.offset_4way);
+    writeDoc(doc, "analogToDpad4WayDebounce", analogToDpadOptions.debounce_4way);
     writeDoc(doc, "analogToDpadSource", analogToDpadOptions.source);
     writeDoc(doc, "AnalogToDpadInputEnabled", analogToDpadOptions.enabled);
 

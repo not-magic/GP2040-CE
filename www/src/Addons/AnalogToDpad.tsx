@@ -32,7 +32,7 @@ export const analogToDpadScheme = {
 		.validateRangeWhenValue('AnalogToDpadInputEnabled', 0, 100),
 	analogToDpad8WayDebounce: yup
 		.number()
-		.label('Debounce')
+		.label('8-Way Debounce')
 		.validateRangeWhenValue('AnalogToDpadInputEnabled', 0, 100),
 	analogToDpad4WayDeadzone: yup
 		.number()
