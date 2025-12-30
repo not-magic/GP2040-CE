@@ -1,10 +1,9 @@
-import React, {useRef, useEffect, useState} from 'react';
+import React, {useRef, useEffect} from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { FormCheck, Row, Col, Tab, Tabs, Form } from 'react-bootstrap';
 import * as yup from 'yup';
 import { hexToRgbArray, rgbMix } from '../Services/Utilities';
 
-import Canvas from '../Components/Section';
 import Section from '../Components/Section';
 import FormSelect from '../Components/FormSelect';
 import FormControl from '../Components/FormControl';
@@ -106,12 +105,13 @@ const AnalogToDpad = ({ values, errors, handleChange, handleCheckbox, setFieldVa
 	};
 
 	const applySquareness = function(x, y, squareness, deadzone) {
-		const deadzone_scale = deadzone / Math.pow(deadzone, 1+squareness);
+		const deadzone_scale = deadzone > 0 ? (deadzone / Math.pow(deadzone, 1+squareness)) : 1.0;
 
 		return [Math.pow(Math.abs(x), 1+squareness) * (x > 0 ? 1 : -1) * deadzone_scale, 
 			   Math.pow(Math.abs(y), 1+squareness) * (y > 0 ? 1 : -1) * deadzone_scale];
 	};
 
+	// 8-way preview
 	useEffect(() => {
 		const squareness = values.analogToDpad8WaySquareness * 0.02;
 		const deadzone = values.analogToDpad8WayDeadzone * 0.01;
@@ -125,7 +125,7 @@ const AnalogToDpad = ({ values, errors, handleChange, handleCheckbox, setFieldVa
 		const cardinal_color = hexToRgbArray(style.getPropertyValue("--bs-teal"));
 		const debounce_color = hexToRgbArray(style.getPropertyValue("--bs-yellow"));
 
-		function colorFunction(x:float, y:float) {
+		function colorFunction(x:number, y:number) {
 
 			[x, y] = applySquareness(x, y, squareness, deadzone);
 
@@ -192,14 +192,14 @@ const AnalogToDpad = ({ values, errors, handleChange, handleCheckbox, setFieldVa
 		const y_color = hexToRgbArray(style.getPropertyValue("--bs-purple"));
 		const debounce_color = hexToRgbArray(style.getPropertyValue("--bs-yellow"));
 
-		function colorFunction(x:float, y:float) {
+		function colorFunction(x:number, y:number) {
 
 			[x, y] = applySquareness(x, y, squareness, deadzone);
 
 			let cardinal = function(debounce_x, debounce_y) {
 
 				// 4-way mode will only ever have one of these active at a time
-				const debounced_deadzone = deadzone - (debounce_x + debounce_y);
+				const debounced_deadzone = Math.max(0, deadzone - (debounce_x + debounce_y));
 
 				const dist_squared = (x*x)+(y*y);
 				const offset_x = cardinal_offset - debounce_x;
@@ -228,10 +228,10 @@ const AnalogToDpad = ({ values, errors, handleChange, handleCheckbox, setFieldVa
 			const [nx, tmp1] = cardinal(debounce, 0);
 			const [tmp2, ny] = cardinal(0, debounce);
 
-			const use_cardinal_color = (values.analogToDpadMode == 0 || nx) ? x_color : y_color;
+			const use_cardinal_color = nx ? x_color : y_color;
 
 			if (ix && iy) {
-				return diagonal_color;
+				return use_cardinal_color;
 			} else if ((nx && iy) || (ny && ix)) {
 				return debounce_color;
 			} else if (nx && ny) {
