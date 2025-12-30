@@ -1,56 +1,56 @@
-import React, { useRef, useEffect } from "react";
-import { Trans, useTranslation } from "react-i18next";
-import { FormCheck, Row, Col, Tab, Tabs } from "react-bootstrap";
-import * as yup from "yup";
-import { hexToRgbArray, rgbMix } from "../Services/Utilities";
+import React, { useRef, useEffect } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
+import { FormCheck, Row, Col, Tab, Tabs } from 'react-bootstrap';
+import * as yup from 'yup';
+import { hexToRgbArray, rgbMix } from '../Services/Utilities';
 
-import Section from "../Components/Section";
-import FormSelect from "../Components/FormSelect";
-import FormControl from "../Components/FormControl";
-import { AddonPropTypes } from "../Pages/AddonsConfigPage";
+import Section from '../Components/Section';
+import FormSelect from '../Components/FormSelect';
+import FormControl from '../Components/FormControl';
+import { AddonPropTypes } from '../Pages/AddonsConfigPage';
 
 export const analogToDpadScheme = {
 	AnalogToDpadInputEnabled: yup
 		.number()
 		.required()
-		.label("Analog To Dpad Input Enabled"),
+		.label('Analog To Dpad Input Enabled'),
 	analogToDpad8WayDeadzone: yup
 		.number()
-		.label("8-Way Deadzone")
-		.validateRangeWhenValue("AnalogToDpadInputEnabled", 1, 100),
+		.label('8-Way Deadzone')
+		.validateRangeWhenValue('AnalogToDpadInputEnabled', 1, 100),
 	analogToDpad8WaySquareness: yup
 		.number()
-		.label("8-Way Squareness")
-		.validateRangeWhenValue("AnalogToDpadInputEnabled", -50, 100),
+		.label('8-Way Squareness')
+		.validateRangeWhenValue('AnalogToDpadInputEnabled', -50, 100),
 	analogToDpad8WaySlope: yup
 		.number()
-		.label("8-Way Slope")
-		.validateRangeWhenValue("AnalogToDpadInputEnabled", 0, 100),
+		.label('8-Way Slope')
+		.validateRangeWhenValue('AnalogToDpadInputEnabled', 0, 100),
 	analogToDpad8WayOffset: yup
 		.number()
-		.label("8-Way Offset")
-		.validateRangeWhenValue("AnalogToDpadInputEnabled", 0, 100),
+		.label('8-Way Offset')
+		.validateRangeWhenValue('AnalogToDpadInputEnabled', 0, 100),
 	analogToDpad8WayDebounce: yup
 		.number()
-		.label("Debounce")
-		.validateRangeWhenValue("AnalogToDpadInputEnabled", 0, 100),
+		.label('Debounce')
+		.validateRangeWhenValue('AnalogToDpadInputEnabled', 0, 100),
 	analogToDpad4WayDeadzone: yup
 		.number()
-		.label("4-Way Deadzone")
-		.validateRangeWhenValue("AnalogToDpadInputEnabled", 1, 100),
+		.label('4-Way Deadzone')
+		.validateRangeWhenValue('AnalogToDpadInputEnabled', 1, 100),
 	analogToDpad4WaySquareness: yup
 		.number()
-		.label("4-Way Squareness")
-		.validateRangeWhenValue("AnalogToDpadInputEnabled", -50, 100),
+		.label('4-Way Squareness')
+		.validateRangeWhenValue('AnalogToDpadInputEnabled', -50, 100),
 	analogToDpad4WayOffset: yup
 		.number()
-		.label("4-Way Offset")
-		.validateRangeWhenValue("AnalogToDpadInputEnabled", 0, 100),
+		.label('4-Way Offset')
+		.validateRangeWhenValue('AnalogToDpadInputEnabled', 0, 100),
 	analogToDpad4WayDebounce: yup
 		.number()
-		.label("4-Way Debounce")
-		.validateRangeWhenValue("AnalogToDpadInputEnabled", 0, 100),
-	analogToDpadSource: yup.number().required().label("Source"),
+		.label('4-Way Debounce')
+		.validateRangeWhenValue('AnalogToDpadInputEnabled', 0, 100),
+	analogToDpadSource: yup.number().required().label('Source'),
 };
 
 export const analogToDpadState = {
@@ -83,7 +83,7 @@ const AnalogToDpad = ({
 			return;
 		}
 
-		const ctx = canvas.getContext("2d");
+		const ctx = canvas.getContext('2d');
 		if (!ctx) {
 			return;
 		}
@@ -131,10 +131,10 @@ const AnalogToDpad = ({
 		const cardinal_offset = values.analogToDpad8WayOffset * 0.01;
 
 		const style = getComputedStyle(document.body);
-		const deadzone_color = hexToRgbArray(style.getPropertyValue("--bs-dark"));
-		const diagonal_color = hexToRgbArray(style.getPropertyValue("--bs-pink"));
-		const cardinal_color = hexToRgbArray(style.getPropertyValue("--bs-teal"));
-		const debounce_color = hexToRgbArray(style.getPropertyValue("--bs-yellow"));
+		const deadzone_color = hexToRgbArray(style.getPropertyValue('--bs-dark'));
+		const diagonal_color = hexToRgbArray(style.getPropertyValue('--bs-pink'));
+		const cardinal_color = hexToRgbArray(style.getPropertyValue('--bs-teal'));
+		const debounce_color = hexToRgbArray(style.getPropertyValue('--bs-yellow'));
 
 		function colorFunction(x: number, y: number) {
 			[x, y] = applySquareness(x, y, squareness, deadzone);
@@ -205,10 +205,10 @@ const AnalogToDpad = ({
 		const cardinal_offset = values.analogToDpad4WayOffset * 0.01;
 
 		const style = getComputedStyle(document.body);
-		const deadzone_color = hexToRgbArray(style.getPropertyValue("--bs-dark"));
-		const x_color = hexToRgbArray(style.getPropertyValue("--bs-cyan"));
-		const y_color = hexToRgbArray(style.getPropertyValue("--bs-purple"));
-		const debounce_color = hexToRgbArray(style.getPropertyValue("--bs-yellow"));
+		const deadzone_color = hexToRgbArray(style.getPropertyValue('--bs-dark'));
+		const x_color = hexToRgbArray(style.getPropertyValue('--bs-cyan'));
+		const y_color = hexToRgbArray(style.getPropertyValue('--bs-purple'));
+		const debounce_color = hexToRgbArray(style.getPropertyValue('--bs-yellow'));
 
 		function colorFunction(x: number, y: number) {
 			[x, y] = applySquareness(x, y, squareness, deadzone);
@@ -279,7 +279,7 @@ const AnalogToDpad = ({
 	]);
 
 	return (
-		<Section title={t("AddonsConfig:analog-to-dpad-header-text")}>
+		<Section title={t('AddonsConfig:analog-to-dpad-header-text')}>
 			<div id="AnalogToDpadOptions" hidden={!values.AnalogToDpadInputEnabled}>
 				<div className="alert alert-info" role="alert">
 					<Trans
@@ -297,7 +297,7 @@ const AnalogToDpad = ({
 				</div>
 				<Row className="mb-3">
 					<FormSelect
-						label={t("AddonsConfig:analog-to-dpad-source-label")}
+						label={t('AddonsConfig:analog-to-dpad-source-label')}
 						name="analogToDpadSource"
 						className="form-select-sm"
 						groupClassName="col-sm-2 mb-3"
@@ -305,14 +305,14 @@ const AnalogToDpad = ({
 						error={errors.analogToDpadSource}
 						isInvalid={Boolean(errors.analogToDpadSource)}
 						onChange={(e) =>
-							setFieldValue("analogToDpadSource", parseInt(e.target.value))
+							setFieldValue('analogToDpadSource', parseInt(e.target.value))
 						}
 					>
 						<option value="0">
-							{t("AddonsConfig:analog-to-dpad-source-1")}
+							{t('AddonsConfig:analog-to-dpad-source-1')}
 						</option>
 						<option value="1">
-							{t("AddonsConfig:analog-to-dpad-source-2")}
+							{t('AddonsConfig:analog-to-dpad-source-2')}
 						</option>
 					</FormSelect>
 				</Row>
@@ -326,7 +326,7 @@ const AnalogToDpad = ({
 						<Tab
 							key="mode8wayConfig"
 							eventKey="mode8wayConfig"
-							title={t("AddonsConfig:analog-to-dpad-mode-8-way")}
+							title={t('AddonsConfig:analog-to-dpad-mode-8-way')}
 						>
 							<Row>
 								<Col lg={4}>
@@ -336,11 +336,11 @@ const AnalogToDpad = ({
 								</Col>
 								<Col>
 									<Row className="mb-3">
-										<p>{t("AddonsConfig:analog-to-dpad-deadzone-text")}</p>
+										<p>{t('AddonsConfig:analog-to-dpad-deadzone-text')}</p>
 
 										<FormControl
 											type="number"
-											label={t("AddonsConfig:analog-to-dpad-deadzone-label")}
+											label={t('AddonsConfig:analog-to-dpad-deadzone-label')}
 											name="analogToDpad8WayDeadzone"
 											className="form-select-sm"
 											groupClassName="col-sm-3 mb-3"
@@ -354,7 +354,7 @@ const AnalogToDpad = ({
 
 										<FormControl
 											type="number"
-											label={t("AddonsConfig:analog-to-dpad-squareness-label")}
+											label={t('AddonsConfig:analog-to-dpad-squareness-label')}
 											name="analogToDpad8WaySquareness"
 											className="form-select-sm"
 											groupClassName="col-sm-3 mb-3"
@@ -370,14 +370,14 @@ const AnalogToDpad = ({
 									<Row className="mb-3">
 										<p>
 											{t(
-												"AddonsConfig:analog-to-dpad-switch-8way-options-text",
+												'AddonsConfig:analog-to-dpad-switch-8way-options-text',
 											)}
 										</p>
 
 										<FormControl
 											type="number"
 											label={t(
-												"AddonsConfig:analog-to-dpad-switch-slope-label",
+												'AddonsConfig:analog-to-dpad-switch-slope-label',
 											)}
 											name="analogToDpad8WaySlope"
 											className="form-select-sm"
@@ -393,7 +393,7 @@ const AnalogToDpad = ({
 										<FormControl
 											type="number"
 											label={t(
-												"AddonsConfig:analog-to-dpad-switch-offset-label",
+												'AddonsConfig:analog-to-dpad-switch-offset-label',
 											)}
 											name="analogToDpad8WayOffset"
 											className="form-select-sm"
@@ -408,7 +408,7 @@ const AnalogToDpad = ({
 
 										<FormControl
 											type="number"
-											label={t("AddonsConfig:analog-to-dpad-debounce-label")}
+											label={t('AddonsConfig:analog-to-dpad-debounce-label')}
 											name="analogToDpad8WayDebounce"
 											className="form-select-sm"
 											groupClassName="col-sm-3 mb-3"
@@ -426,7 +426,7 @@ const AnalogToDpad = ({
 						<Tab
 							key="mode4wayConfig"
 							eventKey="mode4wayConfig"
-							title={t("AddonsConfig:analog-to-dpad-mode-4-way")}
+							title={t('AddonsConfig:analog-to-dpad-mode-4-way')}
 						>
 							<Row>
 								<Col lg={4}>
@@ -436,11 +436,11 @@ const AnalogToDpad = ({
 								</Col>
 								<Col>
 									<Row className="mb-3">
-										<p>{t("AddonsConfig:analog-to-dpad-deadzone-text")}</p>
+										<p>{t('AddonsConfig:analog-to-dpad-deadzone-text')}</p>
 
 										<FormControl
 											type="number"
-											label={t("AddonsConfig:analog-to-dpad-deadzone-label")}
+											label={t('AddonsConfig:analog-to-dpad-deadzone-label')}
 											name="analogToDpad4WayDeadzone"
 											className="form-select-sm"
 											groupClassName="col-sm-3 mb-3"
@@ -454,7 +454,7 @@ const AnalogToDpad = ({
 
 										<FormControl
 											type="number"
-											label={t("AddonsConfig:analog-to-dpad-squareness-label")}
+											label={t('AddonsConfig:analog-to-dpad-squareness-label')}
 											name="analogToDpad4WaySquareness"
 											className="form-select-sm"
 											groupClassName="col-sm-3 mb-3"
@@ -470,14 +470,14 @@ const AnalogToDpad = ({
 									<Row className="mb-3">
 										<p>
 											{t(
-												"AddonsConfig:analog-to-dpad-switch-4way-options-text",
+												'AddonsConfig:analog-to-dpad-switch-4way-options-text',
 											)}
 										</p>
 
 										<FormControl
 											type="number"
 											label={t(
-												"AddonsConfig:analog-to-dpad-switch-offset-label",
+												'AddonsConfig:analog-to-dpad-switch-offset-label',
 											)}
 											name="analogToDpad4WayOffset"
 											className="form-select-sm"
@@ -492,7 +492,7 @@ const AnalogToDpad = ({
 
 										<FormControl
 											type="number"
-											label={t("AddonsConfig:analog-to-dpad-debounce-label")}
+											label={t('AddonsConfig:analog-to-dpad-debounce-label')}
 											name="analogToDpad4WayDebounce"
 											className="form-select-sm"
 											groupClassName="col-sm-3 mb-3"
@@ -511,14 +511,14 @@ const AnalogToDpad = ({
 				</Row>
 			</div>
 			<FormCheck
-				label={t("Common:switch-enabled")}
+				label={t('Common:switch-enabled')}
 				type="switch"
 				id="AnalogToDpadInputButton"
 				reverse
 				isInvalid={false}
 				checked={Boolean(values.AnalogToDpadInputEnabled)}
 				onChange={(e) => {
-					handleCheckbox("AnalogToDpadInputEnabled", values);
+					handleCheckbox('AnalogToDpadInputEnabled', values);
 					handleChange(e);
 				}}
 			/>

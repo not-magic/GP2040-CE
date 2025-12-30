@@ -7,38 +7,38 @@
 #include <algorithm>
 
 /**
- * The goal for this add-on is to provide flexible mapping from an analog stick to a digital output
+ * The goal for this add-on is to provide flexible mapping from an analog stick to the D-pad, and allow switching between them.
  */
 
 bool AnalogToDpadAddon::available() {
-    const AnalogToDpadOptions& options = Storage::getInstance().getAddonOptions().analogToDpadOptions;
-    return options.enabled;
+	const AnalogToDpadOptions& options = Storage::getInstance().getAddonOptions().analogToDpadOptions;
+	return options.enabled;
 }
 
 void AnalogToDpadAddon::reinit() {
-    _enablePinMask = 0;
-    _4wayPinMask = 0;
+	_enablePinMask = 0;
+	_4wayPinMask = 0;
 
-    GpioMappingInfo* pinMappings = Storage::getInstance().getProfilePinMappings();
-    for (Pin_t pin = 0; pin < (Pin_t)NUM_BANK0_GPIOS; pin++)
-    {
-    	switch (pinMappings[pin].action) {
-    	case GpioAction::SUSTAIN_ANALOG_TO_DPAD:
-    		_enablePinMask |= 1 << pin;
-    		break;
+	GpioMappingInfo* pinMappings = Storage::getInstance().getProfilePinMappings();
+	for (Pin_t pin = 0; pin < (Pin_t)NUM_BANK0_GPIOS; pin++)
+	{
+		switch (pinMappings[pin].action) {
+		case GpioAction::SUSTAIN_ANALOG_TO_DPAD:
+			_enablePinMask |= 1 << pin;
+			break;
 
-    	case GpioAction::SUSTAIN_4_8_WAY_MODE:
-    		_4wayPinMask |= 1 << pin;
-    		break;
+		case GpioAction::SUSTAIN_4_8_WAY_MODE:
+			_4wayPinMask |= 1 << pin;
+			break;
 
-    	default:
-    		break;
-    	}
-    }
+		default:
+			break;
+		}
+	}
 }
 
 void AnalogToDpadAddon::setup() {
-    const GamepadOptions& gamepad_options = Storage::getInstance().getGamepadOptions();
+	const GamepadOptions& gamepad_options = Storage::getInstance().getGamepadOptions();
 	_4wayMode = gamepad_options.fourWayMode;
 }
 
@@ -48,11 +48,11 @@ void AnalogToDpadAddon::preprocess() {
 void AnalogToDpadAddon::process()
 {
 	Gamepad * const gamepad = Storage::getInstance().GetGamepad();
-    const AnalogToDpadOptions& options = Storage::getInstance().getAddonOptions().analogToDpadOptions;
+	const AnalogToDpadOptions& options = Storage::getInstance().getAddonOptions().analogToDpadOptions;
 
 	auto map_axis = [](uint16_t x) {
 
-	    return float(x - GAMEPAD_JOYSTICK_MID)  / float(GAMEPAD_JOYSTICK_MAX - GAMEPAD_JOYSTICK_MID);
+		return float(x - GAMEPAD_JOYSTICK_MID)  / float(GAMEPAD_JOYSTICK_MAX - GAMEPAD_JOYSTICK_MID);
 	};
 
 	const bool read_left_stick = options.source == ANALOG_TO_DPAD_SOURCE_1;
@@ -61,7 +61,7 @@ void AnalogToDpadAddon::process()
 	const float ax = map_axis(read_left_stick ? gamepad->state.lx : gamepad->state.rx);
 	const float ay = map_axis(read_left_stick ? gamepad->state.ly : gamepad->state.ry);
 
-    const Mask_t values = gamepad->debouncedGpio;
+  const Mask_t values = gamepad->debouncedGpio;
 	const bool use_4way = _4wayMode || (values & _4wayPinMask) != 0;
 
 	const float deadzone = (use_4way ? options.deadzone4 : options.deadzone8) * 0.01f;
@@ -120,14 +120,14 @@ void AnalogToDpadAddon::process()
 
 				if (std::abs(other_axis_value/(value-offset))*slope < 1) {
 					return 1;
-				}			
+				}
 			} else if (value < -offset) {
 				if (std::abs(other_axis_value/(value+offset))*slope < 1) {
 					return -1;
-				}			
+				}
 			}
 
-			return 0;	
+			return 0;
 		};
 
 		const float offset = options.offset8 * 0.01f;
@@ -145,9 +145,11 @@ void AnalogToDpadAddon::process()
 	if (_enablePinMask == 0 || (values & _enablePinMask) != 0) {
 		gamepad->state.dpad = _lastDpad;
 
+		// clear the joystick we read from
 		if (read_left_stick) {
 			gamepad->state.lx = GAMEPAD_JOYSTICK_MID;
 			gamepad->state.ly = GAMEPAD_JOYSTICK_MID;
+
 		} else {
 			gamepad->state.rx = GAMEPAD_JOYSTICK_MID;
 			gamepad->state.ry = GAMEPAD_JOYSTICK_MID;
